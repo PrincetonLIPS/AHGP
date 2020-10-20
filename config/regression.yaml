@@ -1,0 +1,82 @@
+---
+exp_name: test_cpu
+exp_dir: exp/log_test
+runner: GpSM2AttRunner
+use_gpu: false
+gpus: [0]
+seed: 222
+subsample_size: 10
+sample_size: 20
+is_debug: false
+is_val: true
+dataset:
+  loader_name: GPDataFull
+  name: gp_synthetic_2_15_dim_30p_5k
+  data_path: data/synthetic/gp_synthetic_2_15_dim_30p_5k/
+  output_dim: 2
+  epsilon: 1.0e-2
+model:
+  name: GpSMDoubleAttNoMu
+  input_dim: 1
+  num_attentions1: 8
+  num_attentions2: 8
+  att1_hidden_dim: 256
+  att2_hidden_dim: 256
+  att1_intermediate_dim: 512
+  att2_intermediate_dim: 512
+  hidden_dim_var: [256, 128]
+  num_layer_var: 2
+  hidden_dim_mu: [256, 128]
+  num_layer_mu: 2
+  hidden_dim_weights: [256, 128]
+  num_layer_weights: 2
+  output_dim: 1
+  dropout: 0.1
+  lambda_KL: 1.0
+  num_mix: 10
+  is_no_mu: true
+  is_param_dim_diff: true
+  epsilon: 1.0e-2
+train:
+  optimizer: Adam
+  lr_decay: 0.1
+  lr_decay_steps: [10000]
+  num_workers: 0
+  max_epoch: 200
+  batch_size: 16
+  num_pairs: 256
+  display_iter: 20
+  snapshot_epoch: 10000
+  valid_epoch: 5
+  lr: 1.0e-5
+  wd: 0.0e-4
+  momentum: 0.9
+  warmup_steps: 0
+  shuffle: false
+  is_resume: false
+  pretrain: false
+  resume_model: 
+test:
+  num_workers: 0
+  test_model: pretrained_model/model_snapshot.pth
+  is_test_data_diff: true
+  data_path: data/regression_datasets
+  file_name: housing
+  seed: 10
+  num_data: 2000
+  is_no_mu: true
+  mll_opt: false
+  train_iter: 10
+  warm_start: false
+  train_iter_warmstart: 10
+  add_noise: false
+  add_noise_level: 1.0e-2
+  add_label: false
+  lr: 1.0e-1
+  repeat: 10
+  epsilon: 1.0e-2
+  lr_warmstart: 5.0e-1
+  is_print: true
+  opt_is_lbfgs: false
+  save_dir: exp/results/regression
+  is_save: true

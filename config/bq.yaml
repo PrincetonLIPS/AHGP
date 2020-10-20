@@ -1,0 +1,53 @@
+---
+exp_name: bq
+exp_dir: exp/log_bq
+runner: GpSM2AttRunner
+use_gpu: false
+gpus: [0,1]
+seed: 222
+model:
+  name: GpSMDoubleAttNoMu
+  input_dim: 1
+  data_dim: 10
+  num_attentions1: 8
+  num_attentions2: 8
+  att1_hidden_dim: 256
+  att2_hidden_dim: 256
+  hidden_dim_var: [256, 128]
+  num_layer_var: 2
+  hidden_dim_mu: [256, 128]
+  num_layer_mu: 2
+  hidden_dim_weights: [256, 128]
+  num_layer_weights: 2
+  output_dim: 1
+  dropout: 0.1
+  num_mix: 10
+  is_no_mu: true
+  is_param_dim_diff: true
+  epsilon: 1.0e-2
+  pretrained_model: pretrained_model/model_snapshot.pth
+dataset:
+  name: hennig1D_gaussian_5runs_100iters
+bq:
+  seed: 222
+  #name: hennig2D, sombrero2D, circular_gaussian
+  name: hennig1D
+  data_dim: 1
+  bq_iter: 50
+  plot: false
+  repeated_runs: 5
+  is_GPY: false
+  is_sparseGP: false
+  is_ai: true # use AHGP
+  init_num_data: 10
+  num_inducing_pts: 20 # for sparse GP
+  is_no_mu: true
+  is_dim_diff: true
+  interval_std: 0.4
+  opt_method: Adam
+  opt_iter: 100
+  opt_lr: 5.0e-2
+  opt_is_print: true
+  num_mix: 10
+  epsilon: 1.0e-2
+  save_dir: exp/results/bq

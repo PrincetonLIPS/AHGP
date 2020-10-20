@@ -1,0 +1,50 @@
+---
+exp_name: bo
+exp_dir: exp/log_bo
+runner: GpSM2AttRunner
+use_gpu: false
+gpus: [0,1]
+seed: 222
+model:
+  name: GpSMDoubleAttNoMu
+  input_dim: 1
+  data_dim: 10
+  num_attentions1: 8
+  num_attentions2: 8
+  att1_hidden_dim: 256
+  att2_hidden_dim: 256
+  hidden_dim_var: [256, 128]
+  num_layer_var: 2
+  hidden_dim_mu: [256, 128]
+  num_layer_mu: 2
+  hidden_dim_weights: [256, 128]
+  num_layer_weights: 2
+  output_dim: 1
+  dropout: 0.1
+  lambda_KL: 1.0
+  num_mix: 10
+  is_no_mu: true
+  is_param_dim_diff: true
+  epsilon: 1.0e-2
+  pretrained_model: pretrained_model/model_snapshot.pth
+dataset:
+  name: stybtang10_5runs_200iters
+bo:
+  name: stybtang10
+  data_dim: 10
+  is_GPY: false # set to false to use AHGP
+  is_sparseGP: false
+  num_inducing_pts: 20
+  repeated_runs: 1
+  init_num_data: 5
+  interval_std: 0.4
+  bo_iter: 10
+  is_ai: true # use AHGP if true
+  is_no_mu: true
+  is_dim_diff: true
+  opt_method: Adam
+  opt_iter: 200
+  opt_lr: 1.0e-1
+  opt_is_print: true
+  num_mix: 10
+  epsilon: 1.0e-2
