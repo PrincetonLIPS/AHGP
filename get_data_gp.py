@@ -57,6 +57,7 @@ def gen_data(min_dim = 2,
   ii = 0
   for ii in tqdm(range(num_gps)):
     data_dict = {}
+    # generate two seperate datasets, X and X_2
     X = (npr.rand(N[ii], D[ii])-0.5)*2
     X_2 = (npr.rand(N[ii], D[ii])-0.5)*2
     X, X_2, _, _ = standardize(X, X_2)

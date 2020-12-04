@@ -65,6 +65,8 @@ class GPDataFull(object):
       node_size[ii] = bb['X'].shape[0]
       dim_size[ii] = bb['X'].shape[1]
       bb['X_shuffled'] = bb['X']
+      # training and validation are set to be the same
+      # todo: delete validation, as it is not used
       node_size_tr[ii] = node_size[ii]
       node_size_val[ii] = node_size[ii]
 

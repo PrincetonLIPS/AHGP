@@ -37,6 +37,7 @@ model:
   is_no_mu: true
   is_param_dim_diff: true
   epsilon: 1.0e-2
+  pretrained_model: pretrained_model/model_snapshot.pth
 train:
   optimizer: Adam
   lr_decay: 0.1

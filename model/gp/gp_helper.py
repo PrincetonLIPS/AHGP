@@ -1,11 +1,13 @@
 import torch
 import numpy as np
 import math
-from scipy.stats import norm, multivariate_normal
+from scipy.stats import norm
 import matplotlib.pyplot as plt
-import pdb
 
 def plot_gaussian_mixture_1d(var, weights, mu=None):
+  """
+  Visualize 1D Gaussian mixture
+  """
   if mu is None:
     mu = np.zeros_like(var)
   x = np.linspace(start = -10, stop = 10, num = 2000)

@@ -3,23 +3,20 @@ import sys
 import pickle
 import torch
 from torch import nn
-import logging
-import traceback
 import numpy as np
 from pprint import pprint
 from easydict import EasyDict as edict
 from tqdm import tqdm
 from utils.logger import setup_logging
 from utils.arg_helper import parse_arguments, get_bo_config
-from utils.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, GP_noise, standardize
+from model.gp.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, GP_noise, standardize
+from model.nn import *
 from utils.bo_functions import *
-from utils.bo_model import BO_GP_Model, GPyModelWrapperTime
+from utils.bo_bq_model import Emukit_BO_BQ_GP_Model, GPyModelWrapperTime
 from emukit.bayesian_optimization.acquisitions import ExpectedImprovement
 from emukit.bayesian_optimization.loops import BayesianOptimizationLoop
 from emukit.model_wrappers import GPyModelWrapper
-from model import *
 import matplotlib.pyplot as plt
-from matplotlib import colors as mcolors
 import GPy
 
 ### --- Figure config
@@ -62,10 +59,8 @@ def bo_loop(config, image_path, ai_model=None):
 
     if config.is_GPY:
       kernel = GPy.kern.RBF(input_dim=data_dim, variance=npr.rand(1), lengthscale=npr.rand(data_dim), ARD=True)
-      #kernel.variance.fix()
       for jj in range(num_mix-1):
         rbf_new = GPy.kern.RBF(input_dim=data_dim, variance=npr.rand(1), lengthscale=npr.rand(data_dim), ARD=True)
-        #rbf_new.variance.fix()
         kernel = kernel + rbf_new
       if config.is_sparseGP:
         z = (np.random.rand(config.num_inducing_pts,data_dim)-0.5)*interval_std
@@ -78,8 +73,8 @@ def bo_loop(config, image_path, ai_model=None):
       model_emukit = GPyModelWrapperTime(model_gp)
       model_emukit.optimize()
     else:
-      #Set up BO_GP_Model
-      model_emukit = BO_GP_Model(X_init_norm, Y_init_norm, config, ai_model)
+      #Set up Emukit_BO_BQ_GP_Model
+      model_emukit = Emukit_BO_BQ_GP_Model(X_init_norm, Y_init_norm, config, ai_model)
       model_emukit.optimize()
       model_emukit.set_kernel()
 
@@ -99,7 +94,6 @@ def bo_loop(config, image_path, ai_model=None):
     results_save.minimum_value = results.minimum_value * std_Y.item() + mean_Y.item()
     results_save.minimum_location = results.minimum_location * std.squeeze(0) + mean.squeeze(0)
     results_save.time_elapsed = model_emukit.time_count
-    print(model_emukit.time_count)
     results_list[ii] = results_save
   
 

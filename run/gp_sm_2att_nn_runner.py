@@ -15,17 +15,14 @@ from scipy import stats
 from easydict import EasyDict as edict
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-from model import *
+from model.nn import *
 from data_processing import *
 from utils.logger import get_logger
 from utils.train_helper import data_to_gpu, snapshot, load_model, EarlyStopper, standardize
-from utils.gp_helper import GP_noise, cal_marg_likelihood, cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep
-from utils.gp_helper import cal_kern_matern, cal_kern_rbf, cal_marg_likelihood_single, cal_marg_likelihood_single_L
-from utils.gp_helper import plot_gaussian_mixture_1d
+from model.gp.gp_helper import *
 from utils.nmll_opt import nmll_opt_gp, nmll_opt
 from utils.optimization import get_constant_schedule_with_warmup
 from utils.train_helper import get_lr
-from utils.nmll_opt import nmll_opt
 import matplotlib.pyplot as plt
 import time
 
@@ -74,9 +71,9 @@ class GpSM2AttRunner(object):
         data['max_node_size'],data['X_data_tr'],data['X_data_val'],data['X_data_test'],data['F_tr'],data['F_val'],data['F_test'],data['N_val'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_test'],data['kernel_mask_test'],data['diagonal_mask_test'],data['node_mask_tr'],data['dim_mask'], data['nmll'], data['nmll_test'] = data_to_gpu(
               data['max_node_size'],data['X_data_tr'],data['X_data_val'],data['X_data_test'],data['F_tr'],data['F_val'],data['F_test'],data['N_val'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_test'],data['kernel_mask_test'],data['diagonal_mask_test'],data['node_mask_tr'],data['dim_mask'], data['nmll'], data['nmll_test'])
       if self.model_conf.name == 'GpSMDoubleAtt':
-        mu, var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],data['kernel_mask_test'],data['diagonal_mask_test'],data['N_test'],self.device, X_data_test = data['X_data_test'], F_data_test = data['F_test'], eval_mode = True)
+        mu, var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],device = self.device,eval_mode = True,X_data_test = data['X_data_test'],F_data_test = data['F_test'],kernel_mask_test=data['kernel_mask_test'],diagonal_mask_test=data['diagonal_mask_test'],N_data_test=data['N_test'])
       elif self.model_conf.name == 'GpSMDoubleAttNoMu':
-        var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'], data['kernel_mask_test'],data['diagonal_mask_test'],data['N_test'], self.device, X_data_test = data['X_data_test'], F_data_test = data['F_test'], eval_mode = True)
+        var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],device = self.device,eval_mode = True,X_data_test = data['X_data_test'],F_data_test = data['F_test'],kernel_mask_test=data['kernel_mask_test'],diagonal_mask_test=data['diagonal_mask_test'],N_data_test=data['N_test'])
       else:
         raise ValueError("No model of given name!")
       nmll_orig_test = data['nmll_test']
@@ -140,9 +137,9 @@ class GpSM2AttRunner(object):
               data['max_node_size'],data['X_data_tr'],data['X_data_val'],data['X_data_test'],data['F_tr'],data['F_val'],data['F_test'],data['N_val'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_test'],data['kernel_mask_test'],data['diagonal_mask_test'],data['node_mask_tr'],data['dim_mask'], data['nmll'])
 
       if self.model_conf.name == 'GpSMDoubleAtt':
-        mu, var, weights, nmll_sample, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],data['kernel_mask_test'],data['diagonal_mask_test'],data['N_test'],self.device, X_data_test = data['X_data_test'], F_data_test = data['F_test'], eval_mode = True)
+        mu, var, weights, nmll_sample, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],device = self.device,eval_mode = True,X_data_test = data['X_data_test'],F_data_test = data['F_test'],kernel_mask_test=data['kernel_mask_test'],diagonal_mask_test=data['diagonal_mask_test'],N_data_test=data['N_test'])
       elif self.model_conf.name == 'GpSMDoubleAttNoMu':
-        var, weights, nmll_sample, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'], data['kernel_mask_test'],data['diagonal_mask_test'],data['N_test'], self.device, X_data_test = data['X_data_test'], F_data_test = data['F_test'], eval_mode = True)
+        var, weights, nmll_sample, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],device = self.device,eval_mode = True,X_data_test = data['X_data_test'],F_data_test = data['F_test'],kernel_mask_test=data['kernel_mask_test'],diagonal_mask_test=data['diagonal_mask_test'],N_data_test=data['N_test'])
       else:
         raise ValueError("No model of given name!")
 
@@ -347,9 +344,9 @@ class GpSM2AttRunner(object):
                 data['max_node_size'],data['X_data_tr'],data['X_data_val'],data['X_data_test'],data['F_tr'],data['F_val'],data['F_test'],data['N_val'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_test'],data['kernel_mask_test'],data['diagonal_mask_test'],data['node_mask_tr'],data['dim_mask'], data['nmll'], data['dim_size'])
 
         if self.model_conf.name == 'GpSMDoubleAtt':
-          mu, var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],data['kernel_mask_test'],data['diagonal_mask_test'],data['N_test'],self.device, X_data_test = data['X_data_test'], F_data_test = data['F_test'], eval_mode = True)
+          mu, var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],device = self.device,eval_mode = True,X_data_test = data['X_data_test'],F_data_test = data['F_test'],kernel_mask_test=data['kernel_mask_test'],diagonal_mask_test=data['diagonal_mask_test'],N_data_test=data['N_test'])
         elif self.model_conf.name == 'GpSMDoubleAttNoMu':
-          var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'], data['kernel_mask_test'],data['diagonal_mask_test'],data['N_test'], self.device, X_data_test = data['X_data_test'], F_data_test = data['F_test'], eval_mode = True)
+          var, weights, nmll, nmll_test = model(data['X_data_tr'],data['X_data_val'],data['F_tr'],data['F_val'],data['node_mask_tr'],data['dim_mask'],data['kernel_mask_val'],data['diagonal_mask_val'],data['N_val'],device = self.device,eval_mode = True,X_data_test = data['X_data_test'],F_data_test = data['F_test'],kernel_mask_test=data['kernel_mask_test'],diagonal_mask_test=data['diagonal_mask_test'],N_data_test=data['N_test'])
         else:
           raise ValueError("No model of given name!")
         # print("Outside: input size", data['X_data'].shape, "output_size", nmll.shape)
@@ -474,6 +471,7 @@ class GpSM2AttRunner(object):
 
   def validate(self):
     # create data loader
+    dev_dataset = eval(self.dataset_conf.loader_name)(self.config, split='dev')
     subset_indices = range(self.subsample_size)
     dev_loader_sub = torch.utils.data.DataLoader(
           dev_dataset,
@@ -587,9 +585,6 @@ class GpSM2AttRunner(object):
       x_t = x_t*0.1
       x_v = x_v*0.1
       y_t, y_v, _, std_y_train = standardize(y_t, y_v)
-      y_t = y_t/1
-      y_v = y_v/1
-      std_y_train = std_y_train*1
       data = {}
       data['X'] = x_t
       data['f'] = y_t
@@ -653,9 +648,9 @@ class GpSM2AttRunner(object):
       time_start = time.time()
       with torch.no_grad():
         if self.model_conf.name == 'GpSMDoubleAtt':
-          mu, var, weights, nmll = model(data['X_data'],data['X_data'],data['F'],data['F'],data['node_mask'],data['dim_mask'],data['kernel_mask'],data['diagonal_mask'],data['N'],data['kernel_mask'],data['diagonal_mask'],data['N'],self.device)
+          mu, var, weights, nmll = model(data['X_data'],data['X_data'],data['F'],data['F'],data['node_mask'],data['dim_mask'],data['kernel_mask'],data['diagonal_mask'],data['N'], device = self.device)
         elif self.model_conf.name == 'GpSMDoubleAttNoMu':
-          var, weights, nmll = model(data['X_data'],data['X_data'],data['F'],data['F'],data['node_mask'],data['dim_mask'],data['kernel_mask'],data['diagonal_mask'],data['N'],data['kernel_mask'],data['diagonal_mask'],data['N'],self.device)
+          var, weights, nmll = model(data['X_data'],data['X_data'],data['F'],data['F'],data['node_mask'],data['dim_mask'],data['kernel_mask'],data['diagonal_mask'],data['N'], device = self.device)
         else:
           raise ValueError("No model of given name!")
       time_end= time.time()

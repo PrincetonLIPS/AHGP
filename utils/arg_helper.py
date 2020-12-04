@@ -37,7 +37,7 @@ def parse_arguments():
 
 def get_config(config_file, exp_dir=None):
   """ Construct and snapshot hyper parameters """
-  config = edict(yaml.load(open(config_file, 'r')))
+  config = edict(yaml.load(open(config_file, 'r'),Loader=yaml.FullLoader))
 
   # create hyper parameters
   config.run_id = str(os.getpid())
@@ -62,7 +62,7 @@ def get_config(config_file, exp_dir=None):
 
 def get_bo_config(config_file, exp_dir=None):
   """ Construct and snapshot hyper parameters """
-  config = edict(yaml.load(open(config_file, 'r')))
+  config = edict(yaml.load(open(config_file, 'r'),Loader=yaml.FullLoader))
 
   # create hyper parameters
   config.run_id = str(os.getpid())

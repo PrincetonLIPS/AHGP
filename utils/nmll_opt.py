@@ -1,8 +1,8 @@
 import torch
 from easydict import EasyDict as edict
-from model.gp_sm_mll import GPMLL_SM
-from utils.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep
-from utils.gp_helper import GP_noise
+from utils.gp_sm_mll import GPMLL_SM
+from model.gp.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep
+from model.gp.gp_helper import GP_noise
 import time
 
 def nmll_opt(data,model_params,settings):

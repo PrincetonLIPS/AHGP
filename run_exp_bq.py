@@ -7,16 +7,16 @@ from pprint import pprint
 from tqdm import tqdm
 from utils.logger import setup_logging
 from utils.arg_helper import parse_arguments, get_bo_config
-from utils.gp_helper import standardize
+from model.gp.gp_helper import standardize
+from model.nn import *
 from utils.bo_functions import *
-from utils.bo_model import BO_GP_Model, BaseGaussianProcessCustomModel, QuadratureKernelCustom
+from utils.bo_bq_model import Emukit_BO_BQ_GP_Model, BaseGaussianProcessCustomModel, QuadratureKernelCustom
 from emukit.quadrature.methods import VanillaBayesianQuadrature
 from emukit.test_functions.quadrature.baselines import univariate_approximate_ground_truth_integral, bivariate_approximate_ground_truth_integral
 from emukit.test_functions.quadrature import hennig1D, sombrero2D, hennig2D, circular_gaussian
 from emukit.core.optimization import LocalSearchAcquisitionOptimizer
 from emukit.core.parameter_space import ParameterSpace
 from emukit.quadrature.acquisitions import IntegralVarianceReduction
-from model import *
 import matplotlib.pyplot as plt
 import time
 
@@ -77,11 +77,8 @@ def bq_loop(config, ai_model=None):
     elif data_dim ==2:
       ground_truth = bivariate_approximate_ground_truth_integral(function_norm, integral_bounds_scaled)[0]
 
-
-
-
-    #Set up BO_GP_Model
-    emukit_gp_model = BO_GP_Model(X_init_norm, Y_init_norm, config, ai_model)
+    #Set up Emukit_BO_BQ_GP_Model
+    emukit_gp_model = Emukit_BO_BQ_GP_Model(X_init_norm, Y_init_norm, config, ai_model)
     emukit_gp_model.optimize()
     emukit_gp_model.set_kernel()
     emukit_quad_kern = QuadratureKernelCustom(emukit_gp_model, integral_bounds_scaled)

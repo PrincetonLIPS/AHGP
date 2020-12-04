@@ -5,14 +5,14 @@ runner: GpSM2AttRunner
 use_gpu: false
 gpus: [0]
 seed: 222
-subsample_size: 1000
+subsample_size: 100
 sample_size: 32
 is_debug: false
 is_val: true
 dataset:
   loader_name: GPDataFull
   name: gp_synthetic_2_15_dim_30p_5k
-  data_path: data/synthetic/gp_synthetic_2_15_dim_30p_5k
+  data_path: data/synthetic/gp_synthetic_2_15_dim_30p_5k/
   output_dim: 2
   epsilon: 1.0e-2
 model:
@@ -45,7 +45,7 @@ train:
   max_epoch: 200
   batch_size: 64
   num_pairs: 256
-  display_iter: 20
+  display_iter: 1
   snapshot_epoch: 10000
   valid_epoch: 5
   lr: 1.0e-5

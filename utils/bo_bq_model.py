@@ -4,22 +4,19 @@ from typing import Tuple
 import time
 import torch
 from scipy import special
-from model.gp_sm_mll import GPMLL_SM
+from utils.gp_sm_mll import GPMLL_SM
 from easydict import EasyDict as edict
-from utils.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, GP_noise, standardize
+from model.gp.gp_helper import cal_kern_spec_mix_nomu_sep, GP_noise
 from emukit.core.interfaces.models import IModel
 from emukit.quadrature.interfaces import IBaseGaussianProcess
 from emukit.quadrature.kernels.quadrature_kernels import QuadratureKernel
 from emukit.quadrature.kernels.bounds import BoxBounds
-from emukit.quadrature.kernels.integration_measures import IntegrationMeasure
-from emukit.model_wrappers import GPyModelWrapper, RBFGPy
-import pdb
-from GPy.models import GPRegression, SparseGPRegression
+from emukit.model_wrappers import GPyModelWrapper
 import GPy
 
-class BO_GP_Model(IModel):
+class Emukit_BO_BQ_GP_Model(IModel):
   """
-      This is a Gaussian Process Model that can be used by emukit.
+      This is a Gaussian Process Model that can be used by Emukit for Bayesian optimization or Bayesian quadrature
   """
   def __init__(self, X, Y, config, ai_model=None):
     self.time_count = 0
@@ -83,7 +80,6 @@ class BO_GP_Model(IModel):
     :param X: array of shape (n_points x n_inputs) of points to run prediction for
     :return: Tuple of mean and variance which are 2d arrays of shape (n_points x n_outputs)
     """
-    # !!!
     self.X_test_torch = torch.from_numpy(X).float().to(self.device)
     K11 = cal_kern_spec_mix_nomu_sep(self.X_train_torch, self.X_train_torch, self.sm_params.var, self.sm_params.weights)
     K12 = cal_kern_spec_mix_nomu_sep(self.X_train_torch, self.X_test_torch, self.sm_params.var, self.sm_params.weights)
@@ -113,7 +109,7 @@ class BO_GP_Model(IModel):
 
   def optimize(self) -> None:
     """
-    Optimize hyper-parameters of model
+    Optimize hyper-parameters of the GP model
     """
     if self.is_GPY:
       self.model_gpy.randomize()
@@ -139,11 +135,15 @@ class BO_GP_Model(IModel):
         #Timer starts
         time_start = time.time()
         if self.is_no_mu:
-          var, weights, nmll = self.ai_model(X_data,X_data,F,F,node_mask,dim_mask,kernel_mask,diagonal_mask,N,kernel_mask,diagonal_mask,N,self.device)
+          var, weights, nmll = self.ai_model(X_data,X_data,F,F,node_mask,dim_mask,kernel_mask,diagonal_mask,N,device=self.device)
+        else:
+          mu, var, weights, nmll = self.ai_model(X_data,X_data,F,F,node_mask,dim_mask,kernel_mask,diagonal_mask,N,device=self.device)
         #Timer ends
         time_end = time.time()
         self.nmll_vec.append(nmll.item())
         self.time_count = self.time_count + time_end - time_start
+        if not self.is_no_mu:
+          self.sm_params.mu = mu.detach().squeeze(0) # M X D
         self.sm_params.var = var.detach().squeeze(0) # M X D
         self.sm_params.weights = weights.detach().squeeze(0)
       else:
@@ -206,6 +206,9 @@ class BO_GP_Model(IModel):
     return self.Y_train
 
 class QuadratureKernelCustom:
+  """
+  Customized quadrature kernel model for spectral mixture kernel with zero means
+  """
   def __init__(self,gp_model,integral_bounds,variable_names: str=''):
     self.gp_model = gp_model
     reasonable_box_bounds = integral_bounds
@@ -273,7 +276,7 @@ class BaseGaussianProcessCustomModel(IBaseGaussianProcess):
     super().__init__(kern=kern)
     self.model = gp_model
     if noise_free:
-        self.model.noise_level = gp_model.noise_level
+      self.model.noise_level = gp_model.noise_level
   @property
   def X(self) -> np.ndarray:
     return self.model.X_train
@@ -345,10 +348,10 @@ class BaseGaussianProcessCustomModel(IBaseGaussianProcess):
     """ Optimize the hyperparameters of the GP """
     self.model.optimize()
 
-
-
-
 class GPyModelWrapperTime(GPyModelWrapper):
+  """
+  Same GPyModelWrapper from emukit but with timer
+  """
   def __init__(self, gpy_model, n_restarts: int = 1):
     GPyModelWrapper.__init__(self, gpy_model, n_restarts)
     self.time_count = 0
@@ -360,6 +363,5 @@ class GPyModelWrapperTime(GPyModelWrapper):
     time_start = time.time()
     self.model.randomize()
     self.model.optimize_restarts(self.n_restarts, robust=True)
-    #print(-self.model.log_likelihood()/self.model.Y.size)
     time_end = time.time()
     self.time_count = self.time_count + time_end - time_start

@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.module import *
-from utils.gp_helper import cal_kern_spec_mix_sep, cal_marg_likelihood
+from model.nn.module import *
+from model.gp.gp_helper import cal_kern_spec_mix_sep, cal_marg_likelihood
 
 
 __all__ = ['GpSMDoubleAtt']
@@ -69,7 +69,7 @@ class GpSMDoubleAtt(nn.Module):
     
     self.log_softmax = nn.LogSoftmax(dim=1)
     self.softmax = nn.Softmax(dim=-1)
-  def forward(self, X_data_tr, X_data_val, F_data_tr, F_data_val, node_mask_tr, dim_mask, kernel_mask_val, diagonal_mask_val, N_data_val, kernel_mask_test, diagonal_mask_test, N_data_test, device, X_data_test = None, F_data_test = None, eval_mode = False):
+  def forward(self, X_data_tr, X_data_val, F_data_tr, F_data_val, node_mask_tr, dim_mask, kernel_mask_val, diagonal_mask_val, N_data_val, device=torch.device('cpu'), eval_mode = False, X_data_test = None, F_data_test = None, kernel_mask_test=None, diagonal_mask_test=None, N_data_test=None):
     """
       X_data: B X N X D
       F_data: B X N
