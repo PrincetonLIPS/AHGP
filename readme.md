@@ -1,3 +1,4 @@
+## Task-Agnostic Amortized Inference of Gaussian Process Hyperparameters (AHGP)
 ## Requirements and installation
 * `python >= 3.6`
 * `pytorch >= 1.2.0`
