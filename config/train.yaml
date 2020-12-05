@@ -5,7 +5,7 @@ runner: GpSM2AttRunner
 use_gpu: false
 gpus: [0]
 seed: 222
-subsample_size: 100
+subsample_size: 5000
 sample_size: 32
 is_debug: false
 is_val: true
