@@ -12,20 +12,11 @@ def hyperparam(x_t,y_t,x_v,model_config_filename,use_gpu=False):
   pretrained_model_filename = model_conf.pretrained_model
   data_dim = x_t.shape[1]
   num_data = x_t.shape[0]
-  # noise variance of GP
-  epsilon = 0.01
 
-  x_t, x_v, _, _ = standardize(x_t, x_v)
-  x_t = x_t*0.1
-  x_v = x_v*0.1
-  y_t, mean_y_train, std_y_train = standardize(y_t)
   data = {}
   data['X'] = x_t
   data['f'] = y_t
   data['X_2'] = x_v
-  train_x = torch.from_numpy(data['X']).float().to(device)
-  train_y = torch.from_numpy(data['f']).float().unsqueeze(-1).to(device)
-  test_x = torch.from_numpy(data['X_2']).float().to(device)
   data['X_data'] =torch.from_numpy(data['X']).float().unsqueeze(0).to(device) # 1 X N X D
   data['F'] = torch.from_numpy(data['f']).float().unsqueeze(0).to(device) # 1 X N
   data['node_mask'] = torch.ones(num_data).unsqueeze(0).to(device) # 1 X N
@@ -54,4 +45,4 @@ def hyperparam(x_t,y_t,x_v,model_config_filename,use_gpu=False):
   if not model_conf.is_no_mu:
     hyper_params.mu = mu.squeeze(0)
 
-  return hyper_params, x_v, mean_y_train, std_y_train
+  return hyper_params

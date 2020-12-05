@@ -2,7 +2,7 @@ import torch
 from easydict import EasyDict as edict
 import yaml
 from model.nn import *
-from model.gp.gp_helper import cal_kern_spec_mix_nomu_sep, cal_marg_likelihood_single, standardize, GP_noise
+from model.gp.gp_helper import cal_kern_spec_mix_nomu_sep, cal_marg_likelihood_single, GP_noise
 
 def predict(x_t,y_t,x_v,model_config_filename,use_gpu=False):
 
@@ -15,10 +15,6 @@ def predict(x_t,y_t,x_v,model_config_filename,use_gpu=False):
   # noise variance of GP
   epsilon = 0.01
 
-  x_t, x_v, _, _ = standardize(x_t, x_v)
-  x_t = x_t*0.1
-  x_v = x_v*0.1
-  y_t, mean_y_train, std_y_train = standardize(y_t)
   data = {}
   data['X'] = x_t
   data['f'] = y_t
@@ -63,4 +59,4 @@ def predict(x_t,y_t,x_v,model_config_filename,use_gpu=False):
   mu_test = mu_test.detach().squeeze(-1).cpu().numpy()
   var_test = var_test.detach().squeeze(-1).cpu().numpy().diagonal()
 
-  return mu_test * std_y_train + mean_y_train, var_test * std_y_train**2
+  return mu_test, var_test
