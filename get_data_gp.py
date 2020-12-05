@@ -146,7 +146,7 @@ if __name__ == '__main__':
   settings.device = device
   settings.opt_is_lbfgs = False
 
-  train_dataset = gen_data(seed=100, num_gps=5000, is_opt=False, opt_settings=settings)
+  train_dataset = gen_data(seed=123, num_gps=5000, is_opt=False, opt_settings=settings)
   dev_dataset = gen_data(seed=456, num_gps=5000, is_opt=False, opt_settings=settings)
   test_dataset = gen_data(seed=789, num_gps=5000, is_opt=False, opt_settings=settings)
 
