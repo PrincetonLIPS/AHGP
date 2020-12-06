@@ -13,7 +13,7 @@ def predict(x_t,y_t,x_v,model_config_filename,use_gpu=False):
   data_dim = x_t.shape[1]
   num_data = x_t.shape[0]
   # noise variance of GP
-  epsilon = 0.01
+  epsilon = model_conf.epsilon
 
   data = {}
   data['X'] = x_t
