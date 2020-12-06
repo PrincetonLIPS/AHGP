@@ -7,8 +7,8 @@ from pprint import pprint
 from tqdm import tqdm
 from utils.logger import setup_logging
 from utils.arg_helper import parse_arguments, get_bo_config
-from model.gp.gp_helper import standardize
-from model.nn import *
+from ahgp.gp.gp_helper import standardize
+from ahgp.nn import *
 from utils.bo_functions import *
 from utils.bo_bq_model import Emukit_BO_BQ_GP_Model, BaseGaussianProcessCustomModel, QuadratureKernelCustom
 from emukit.quadrature.methods import VanillaBayesianQuadrature

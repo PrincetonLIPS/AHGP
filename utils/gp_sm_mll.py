@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from model.gp.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, cal_marg_likelihood_single
+from ahgp.gp.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, cal_marg_likelihood_single
 
 __all__ = ['GPMLL_SM']
 

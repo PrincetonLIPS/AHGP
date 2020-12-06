@@ -1,1 +1,1 @@
-from model.gp.gp_helper import *
+from ahgp.gp.gp_helper import *

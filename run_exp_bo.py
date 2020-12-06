@@ -9,8 +9,8 @@ from easydict import EasyDict as edict
 from tqdm import tqdm
 from utils.logger import setup_logging
 from utils.arg_helper import parse_arguments, get_bo_config
-from model.gp.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, GP_noise, standardize
-from model.nn import *
+from ahgp.gp.gp_helper import cal_kern_spec_mix_sep, cal_kern_spec_mix_nomu_sep, GP_noise, standardize
+from ahgp.nn import *
 from utils.bo_functions import *
 from utils.bo_bq_model import Emukit_BO_BQ_GP_Model, GPyModelWrapperTime
 from emukit.bayesian_optimization.acquisitions import ExpectedImprovement

@@ -6,7 +6,7 @@ import torch
 from scipy import special
 from utils.gp_sm_mll import GPMLL_SM
 from easydict import EasyDict as edict
-from model.gp.gp_helper import cal_kern_spec_mix_nomu_sep, GP_noise
+from ahgp.gp.gp_helper import cal_kern_spec_mix_nomu_sep, GP_noise
 from emukit.core.interfaces.models import IModel
 from emukit.quadrature.interfaces import IBaseGaussianProcess
 from emukit.quadrature.kernels.quadrature_kernels import QuadratureKernel

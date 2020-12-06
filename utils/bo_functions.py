@@ -1,7 +1,6 @@
 import numpy as np
 import math
 from emukit.core import ParameterSpace, ContinuousParameter
-import pdb
 
 def stybtang2():
   parameter_space = ParameterSpace([ContinuousParameter('x1', -5, 5), ContinuousParameter('x2', -5, 5)])

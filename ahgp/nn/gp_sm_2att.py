@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.nn.module import *
-from model.gp.gp_helper import cal_kern_spec_mix_sep, cal_marg_likelihood
+from ahgp.nn.module import *
+from ahgp.gp.gp_helper import cal_kern_spec_mix_sep, cal_marg_likelihood
 
 
 __all__ = ['GpSMDoubleAtt']

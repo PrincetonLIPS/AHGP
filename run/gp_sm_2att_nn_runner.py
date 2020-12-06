@@ -15,11 +15,11 @@ from scipy import stats
 from easydict import EasyDict as edict
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-from model.nn import *
+from ahgp.nn import *
 from data_processing import *
 from utils.logger import get_logger
 from utils.train_helper import data_to_gpu, snapshot, load_model, EarlyStopper, standardize
-from model.gp.gp_helper import *
+from ahgp.gp.gp_helper import *
 from utils.nmll_opt import nmll_opt_gp, nmll_opt
 from utils.optimization import get_constant_schedule_with_warmup
 from utils.train_helper import get_lr

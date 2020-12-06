@@ -3,7 +3,6 @@ import glob
 import torch
 import pickle
 import numpy as np
-import pdb
 from sklearn.utils import shuffle
 
 __all__ = ['GPDataFull']

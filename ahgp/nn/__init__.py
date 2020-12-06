@@ -1,2 +1,2 @@
-from model.nn.gp_sm_2att_nomu import *
-from model.nn.gp_sm_2att import *
+from ahgp.nn.gp_sm_2att_nomu import *
+from ahgp.nn.gp_sm_2att import *
