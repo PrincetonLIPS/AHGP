@@ -8,7 +8,7 @@ The repository also includes a pip installable package that includes the essenti
 
 If you find this repository helpful, please cite our NeurIPS 2020 paper:
 ```
-@incollection{liu2020ahgp,
+@inproceedings{liu2020ahgp,
   title={Task-Agnostic Amortized Inference of Gaussian Process Hyperparameters},
   author={Liu, Sulin and Sun, Xingyuan and Ramadge, Peter J. and Adams, Ryan P.},
   booktitle={Advances in Neural Information Processing Systems},
@@ -37,7 +37,8 @@ pip install amor-hyp-gp
 
 ### Usage
 
-Usage examples are included in `examples/`. `example_ahgp_inference.py` contains an example of full GP inference, which uses amortized GP hyperparameter inference and full GP prediction implemented in `PyTorch`. 
+Usage examples are included in `examples/`. 
+`example_ahgp_inference.py` contains an example of full GP inference, which uses amortized GP hyperparameter inference and full GP prediction implemented in `PyTorch`. 
 `example_ahgp_hyperparameters.py` contains an example that outputs the GP hyperprameters (means and variances of the Gaussian mixtures for modeling the spectral density).
 
 `config/model.yaml` provides a example configuration file of the pretrained model to be used for amortized inference. 
