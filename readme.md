@@ -37,8 +37,10 @@ pip install amor-hyp-gp
 
 ### Usage
 
-Usage examples are included in `examples/`. `ahgp_gp_inference_example.py` contains an example of full GP inference, which uses amortized GP hyperparameter inference and full GP prediction implemented in `PyTorch`. 
-`ahgp_gp_inference_example.py` contains an example that outputs the GP hyperprameters (means and variances of the Gaussian mixtures for modeling the spectral density).
+Usage examples are included in `examples/`. `example_ahgp_inference.py` contains an example of full GP inference, which uses amortized GP hyperparameter inference and full GP prediction implemented in `PyTorch`. 
+`example_ahgp_hyperparameters.py` contains an example that outputs the GP hyperprameters (means and variances of the Gaussian mixtures for modeling the spectral density).
+
+`config/model.yaml` provides a example configuration file of the pretrained model to be used for amortized inference. 
 
 ## Code for training and running the models
 
