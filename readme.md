@@ -1,6 +1,6 @@
 # Task-Agnostic Amortized Inference of Gaussian Process Hyperparameters (AHGP)
 
-![AHGP pipeline](https://raw.githubusercontent.com/PrincetonLIPS/AHGP/aux_files/pipeline.pdf)
+![AHGP pipeline](https://raw.githubusercontent.com/PrincetonLIPS/AHGP/aux_files/pipeline.png)
 
 This repository contains code and pretrained-models for the task-agnostic amortized inference of GP hyperparameters (AHGP) proposed in our [NeurIPS 2020 paper](https://papers.nips.cc/paper/2020/hash/f52db9f7c0ae7017ee41f63c2a7353bc-Abstract.html). AHGP is a method that allows light-weight amortized inference of GP hyperparameters through a pre-trained neural model.
 
