@@ -2,9 +2,9 @@
 
 ![AHGP pipeline](aux_files/pipeline.png)
 
-This repository contains code and pretrained-models for the task-agnostic amortized inference of GP hyperparameters (AHGP) proposed in our [NeurIPS 2020 paper](https://papers.nips.cc/paper/2020/hash/f52db9f7c0ae7017ee41f63c2a7353bc-Abstract.html). AHGP is a method that allows light-weight amortized inference of GP hyperparameters through a pre-trained neural model.
+This repository contains code and pretrained-models for the task-agnostic amortized inference of GP hyperparameters (AHGP) proposed in our [NeurIPS 2020 paper](https://papers.nips.cc/paper/2020/hash/f52db9f7c0ae7017ee41f63c2a7353bc-Abstract.html). AHGP is a method that allows light-weight amortized inference of GP hyperparameters with a pre-trained neural model.
 
-The repository also includes a pip installable package that includes the essential components for using AHGP for GP hyperparameters inference. The hope is to make it easier for you to use AHGP with a simple function call.
+The repository also includes a pip installable package with the essential components of AHGP so that you can use AHGP with simple function calls.
 
 If you find this repository helpful, please cite our NeurIPS 2020 paper:
 ```
@@ -21,7 +21,7 @@ If you find this repository helpful, please cite our NeurIPS 2020 paper:
 
 ### Installation
 
-The essential components of AHGP are packaged in `model/` and you can install this via PyPI:
+The essential components of AHGP are packaged in `ahgp/` and you can install this via PyPI:
 ```bash
 pip install amor-hyp-gp
 ```
@@ -37,8 +37,10 @@ pip install amor-hyp-gp
 
 ### Usage
 
-Usage examples are included in `examples/`. 
-`example_ahgp_inference.py` contains an example of full GP inference, which uses amortized GP hyperparameter inference and full GP prediction implemented in `PyTorch`. 
+Usage examples are included in `examples/`.
+
+`example_ahgp_inference.py` contains an example of full GP inference, which uses amortized GP hyperparameter inference and full GP prediction implemented in `PyTorch`.
+
 `example_ahgp_hyperparameters.py` contains an example that outputs the GP hyperprameters (means and variances of the Gaussian mixtures for modeling the spectral density).
 
 `config/model.yaml` provides a example configuration file of the pretrained model to be used for amortized inference. 
@@ -65,7 +67,7 @@ In `config/train.yaml`, you can define the configurations for the neural model a
 
 **Regression experiments**
 
-To run the experiments on regression benchmarks with the pretrained neural model, run:
+To run the regression benchmark experiments with the pretrained neural model, use:
 ```bash
 python run_exp.py -c config/regression.yaml -t
 ```
@@ -73,7 +75,7 @@ In `config/regression.yaml`, you can define the configurations of the pretrained
 
 **Bayesian optimization experiments**
 
-To run the Bayesian optimization experiments with the pretrained neural model, run:
+To run the Bayesian optimization experiments with the pretrained neural model, use:
 ```bash
 python run_exp_bo.py -c config/bo.yaml
 ```
@@ -81,7 +83,7 @@ In `config/bo.yaml`, you can define the configurations of the pretrained model a
 
 **Bayesian quadrature experiments**
 
-To run the Bayesian quadrature experiments with the pretrained neural model, run:
+To run the Bayesian quadrature experiments with the pretrained neural model, use:
 ```bash
 python run_exp_bq.py -c config/bq.yaml
 ```
