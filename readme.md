@@ -45,6 +45,8 @@ Usage examples are included in `examples/`.
 
 `config/model.yaml` provides a example configuration file of the pretrained model to be used for amortized inference. 
 
+In `pretrained_model/`, we provided the pretrained model used in our paper, which is trained on 5000 synthetic datasets of relative small size generated from stationary GP priors. We also encourage you to try with your own pretrained model for your specific problem.
+
 ## Code for training and running the models
 
 ### Generating synthetic data for training
